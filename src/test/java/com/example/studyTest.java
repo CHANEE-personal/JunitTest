@@ -3,6 +3,7 @@ package com.example;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Executable;
+import java.time.Duration;
 import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,12 +16,20 @@ class studyTest {
     public void create_new_study() {
         Study study = new Study(-10);
 
-        assertAll(
-                () -> assertNotNull(study),
-                () -> assertEquals(StudyStatus.DRAFT, study.getStatus(),
-                    () -> "스터디를 처음 만들면 " + StudyStatus.DRAFT + "상태다."),
-                () -> assertTrue(study.getLimit() > 0, "스터디 최대 참석 가능 인원은 0보다 커야 한다.")
-        );
+//        assertAll(
+//                () -> assertNotNull(study),
+//                () -> assertEquals(StudyStatus.DRAFT, study.getStatus(),
+//                    () -> "스터디를 처음 만들면 " + StudyStatus.DRAFT + "상태다."),
+//                () -> assertTrue(study.getLimit() > 0, "스터디 최대 참석 가능 인원은 0보다 커야 한다.")
+//        );
+
+//        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Study(-10));
+//        assertEquals("limit은 0보다 커야한다.", exception.getMessage());
+
+        assertTimeout(Duration.ofMillis(100), () -> {
+            new Study(10);
+            Thread.sleep(300);
+        });
     }
 
     @Test
