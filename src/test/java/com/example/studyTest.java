@@ -4,14 +4,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-import java.lang.reflect.Executable;
 import java.time.Duration;
-import java.util.function.Supplier;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class studyTest {
@@ -20,7 +16,6 @@ class studyTest {
     @DisplayName("스터디 만들기")
     @EnabledOnOs({ OS.MAC, OS.LINUX })
     public void create_new_study() {
-
         String test_env = System.getenv("TEST_ENV");
         System.out.println("local");
         Study actual = new Study(100);
