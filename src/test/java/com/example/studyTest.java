@@ -23,7 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class studyTest {
+
+    int value = 1;
 
     @FastTest @Tag("fast")
     @DisplayName("스터디 만들기 fast")
@@ -47,7 +50,9 @@ class studyTest {
             assertThat(actual.getLimit()).isGreaterThan(0);
         });
 
-        Study actual = new Study(10);
+        System.out.println(this);
+        System.out.println(value++);
+        Study actual = new Study(1);
         assertThat(actual.getLimit()).isGreaterThan(0);
 
         assertTimeout(Duration.ofMillis(100), () -> {
@@ -76,7 +81,8 @@ class studyTest {
     @DisabledOnOs(OS.MAC)
     @EnabledOnJre(JRE.OTHER)
     void create_new_study_again() {
-        System.out.println("create1");
+        System.out.println(this);
+        System.out.println("create1 " + value++);
     }
 
     @DisplayName("스터디 만들기")
@@ -113,12 +119,12 @@ class studyTest {
     }
 
     @BeforeAll
-    static void beforeAll() {
+    void beforeAll() {
         System.out.println("before all");
     }
 
     @AfterAll
-    static void afterAll() {
+    void afterAll() {
         System.out.println("after all");
     }
 
