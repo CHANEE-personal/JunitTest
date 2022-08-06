@@ -1,8 +1,9 @@
 package com.example;
 
+import com.example.domain.OldStudy;
+import com.example.domain.StudyStatus;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -44,33 +45,33 @@ class studyTest {
 
         assumingThat("LOCAL".equalsIgnoreCase(test_env), () -> {
             System.out.println("local");
-            Study actual = new Study(100);
+            OldStudy actual = new OldStudy(100);
             assertThat(actual.getLimit()).isGreaterThan(0);
         });
 
         assumingThat("chanhee".equalsIgnoreCase(test_env), () -> {
             System.out.println("chanhee");
-            Study actual = new Study(10);
+            OldStudy actual = new OldStudy(10);
             assertThat(actual.getLimit()).isGreaterThan(0);
         });
 
         System.out.println(this);
         System.out.println(value++);
-        Study actual = new Study(1);
+        OldStudy actual = new OldStudy(1);
         assertThat(actual.getLimit()).isGreaterThan(0);
 
         assertTimeout(Duration.ofMillis(100), () -> {
-            new Study(10);
+            new OldStudy(10);
             Thread.sleep(300);
         });
 
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> new Study(-10));
+                assertThrows(IllegalArgumentException.class, () -> new OldStudy(-10));
 
         String message = exception.getMessage();
         assertEquals("limit은 0보다 커야한다.", message);
 
-        Study study = new Study(100);
+        OldStudy study = new OldStudy(100);
 
         assertAll(
                 () -> assertNotNull(study),
@@ -106,22 +107,22 @@ class studyTest {
     void parameterizedTest(
 //            @ConvertWith(StudyConverter.class) Study study
 //            ArgumentsAccessor argumentsAccessor
-            @AggregateWith(StudyAggregator.class) Study study) {
+            @AggregateWith(StudyAggregator.class) OldStudy study) {
         System.out.println(study);
     }
 
     static class StudyAggregator implements ArgumentsAggregator {
         @Override
         public Object aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) throws ArgumentsAggregationException {
-            return new Study(argumentsAccessor.getInteger(0), argumentsAccessor.getString(1));
+            return new OldStudy(argumentsAccessor.getInteger(0), argumentsAccessor.getString(1));
         }
     }
 
     static class StudyConverter extends SimpleArgumentConverter {
         @Override
         protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
-            assertEquals(Study.class, targetType, "Can only convert");
-            return new Study(Integer.parseInt(source.toString()));
+            assertEquals(OldStudy.class, targetType, "Can only convert");
+            return new OldStudy(Integer.parseInt(source.toString()));
         }
     }
 

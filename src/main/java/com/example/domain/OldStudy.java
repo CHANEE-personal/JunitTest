@@ -1,6 +1,6 @@
-package com.example;
+package com.example.domain;
 
-public class Study {
+public class OldStudy {
 
     private StudyStatus status = StudyStatus.DRAFT;
 
@@ -8,12 +8,12 @@ public class Study {
 
     private String name;
 
-    public Study(int limit, String name) {
+    public OldStudy(int limit, String name) {
         this.limit = limit;
         this.name = name;
     }
 
-    public Study(int limit) {
+    public OldStudy(int limit) {
 
         if (limit < 0) {
             throw new IllegalArgumentException("limit은 0보다 커야한다.");
