@@ -2,7 +2,9 @@ package com.example.study;
 
 import com.example.domain.Member;
 import com.example.domain.Study;
+import com.example.domain.StudyStatus;
 import com.example.member.MemberService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -80,5 +82,22 @@ class StudyServiceTest {
 //        InOrder inOrder = inOrder(memberService);
 //        inOrder.verify(memberService).notify(study);
 
+    }
+    @DisplayName("다른 사용자가 볼 수 있도록 스터디를 공개한다.")
+    @Test
+    void openStudy() {
+        // Given
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        Study study = new Study(10, "더 자바, 테스트");
+        assertNull(study.getOpenedDateTime());
+        given(studyRepository.save(study)).willReturn(study);
+
+        // When
+        studyService.openStudy(study);
+
+        // Then
+        assertEquals(StudyStatus.OPENED, study.getStatus());
+        assertNotNull(study.getOpenedDateTime());
+        then(memberService).should().notify(study);
     }
 }
