@@ -5,6 +5,7 @@ import com.example.domain.Study;
 import com.example.member.MemberService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -59,5 +60,14 @@ class StudyServiceTest {
 //
 //        memberService.validate(2L);
         studyService.createNewStudy(1L, study);
+
+        verify(memberService, times(1)).notify(study);
+        verifyNoMoreInteractions(memberService);
+
+        verify(memberService, never()).validate(any());
+
+//        InOrder inOrder = inOrder(memberService);
+//        inOrder.verify(memberService).notify(study);
+
     }
 }
