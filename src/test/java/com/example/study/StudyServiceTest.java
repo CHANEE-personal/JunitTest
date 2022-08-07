@@ -20,6 +20,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
@@ -27,6 +28,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.File;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,17 +52,20 @@ class StudyServiceTest {
     @Value("${container.port}") int port;
 
     @Container
-    static GenericContainer postgreSQLContainer = new GenericContainer("postgres")
-            .withExposedPorts(5432)
-            .withEnv("POSTGRES_DB", "studytest")
-            .waitingFor(Wait.forListeningPort());
+    static DockerComposeContainer composeContainer =
+            new DockerComposeContainer(new File("docker-compose.yml"))
+                    .withExposedService("study-db", 5432);
+//    static GenericContainer postgreSQLContainer = new GenericContainer("postgres")
+//            .withExposedPorts(5432)
+//            .withEnv("POSTGRES_DB", "studytest")
+//            .waitingFor(Wait.forListeningPort());
 //    static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer()
 //            .withDatabaseName("studytest");
 
     @BeforeAll
     static void beforeAll() {
         Slf4jLogConsumer logConsumer = new Slf4jLogConsumer(log);
-        postgreSQLContainer.followOutput(logConsumer);
+//        postgreSQLContainer.followOutput(logConsumer);
     }
 
     @BeforeEach
@@ -68,8 +73,8 @@ class StudyServiceTest {
         System.out.println("============");
         System.out.println(environment.getProperty("container.port"));
         System.out.println(port);
-        postgreSQLContainer.getMappedPort(5432);
-        postgreSQLContainer.getLogs();
+//        postgreSQLContainer.getMappedPort(5432);
+//        postgreSQLContainer.getLogs();
         studyRepository.deleteAll();
     }
 
@@ -148,12 +153,12 @@ class StudyServiceTest {
         assertNotNull(study.getOpenedDateTime());
         then(memberService).should().notify(study);
     }
-
+//
     static class ContainerPropertyInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
         public void initialize(ConfigurableApplicationContext context) {
-            TestPropertyValues.of("container.port="+postgreSQLContainer.getMappedPort(5432))
+            TestPropertyValues.of("container.port="+composeContainer.getServicePort("study-db", 5432))
                     .applyTo(context.getEnvironment());
         }
     }
