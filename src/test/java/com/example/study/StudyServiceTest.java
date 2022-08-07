@@ -17,12 +17,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class StudyServiceTest {
 
-//    @Mock MemberService memberService;
-//    @Mock StudyRepository studyRepository;
+    @Mock MemberService memberService;
+    @Mock StudyRepository studyRepository;
 
     @Test
-    void createNewStudy(@Mock MemberService memberService,
-                            @Mock StudyRepository studyRepository) {
+    void createNewStudy() {
         StudyService studyService = new StudyService(memberService, studyRepository);
         assertNotNull(studyService);
 
@@ -30,19 +29,24 @@ class StudyServiceTest {
         member.setId(1L);
         member.setEmail("cksgml@email.com");
 
-        when(memberService.findById(any()))
-                .thenReturn(Optional.of(member))
-                .thenThrow(new RuntimeException())
-                .thenReturn(Optional.empty());
+        Study study = new Study(10, "테스트");
 
-        Optional<Member> byId = memberService.findById(1L);
-        assertEquals("cksgml@email.com", byId.get().getEmail());
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(study)).thenReturn(study);
 
-        assertThrows(RuntimeException.class, () -> {
-           memberService.findById(2L);
-        });
-
-        assertEquals(Optional.empty(), memberService.findById(3L));
+//        when(memberService.findById(any()))
+//                .thenReturn(Optional.of(member))
+//                .thenThrow(new RuntimeException())
+//                .thenReturn(Optional.empty());
+//
+//        Optional<Member> byId = memberService.findById(1L);
+//        assertEquals("cksgml@email.com", byId.get().getEmail());
+//
+//        assertThrows(RuntimeException.class, () -> {
+//           memberService.findById(2L);
+//        });
+//
+//        assertEquals(Optional.empty(), memberService.findById(3L));
 
 //        assertEquals("cksgml@email.com", memberService.findById(1L).get().getEmail());
 //        assertEquals("cksgml@email.com", memberService.findById(2L).get().getEmail());
@@ -54,6 +58,6 @@ class StudyServiceTest {
 //        });
 //
 //        memberService.validate(2L);
-//        studyService.createNewStudy(1L, study);
+        studyService.createNewStudy(1L, study);
     }
 }
